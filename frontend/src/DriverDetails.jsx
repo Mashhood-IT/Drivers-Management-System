@@ -143,19 +143,20 @@ export default function DriverDetails() {
 
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-6">
+        <button
+  className={`whitespace-nowrap px-6  py-2 font-medium lg:text-md text-xs ${
+    activeTab === "personal"
+      ? "text-blue-600 border-b-2 border-blue-600"
+      : "text-gray-500 hover:text-gray-700"
+  }`}
+  onClick={() => setActiveTab("personal")}
+>
+  Personal Details
+</button>
+
           <button
-            className={`px-6 py-2 font-medium text-sm  ${
-              activeTab === "personal"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-            onClick={() => setActiveTab("personal")}
-          >
-            Personal Details
-          </button>
-          <button
-            className={`px-6 py-2 font-medium ${
-              activeTab === "vehicle"
+  className={`whitespace-nowrap px-6  py-2 font-medium lg:text-md text-xs ${
+    activeTab === "vehicle"
                 ? "text-blue-600 border-b-2 border-blue-600"
                 : "text-gray-500 hover:text-gray-700"
             }`}
@@ -164,8 +165,8 @@ export default function DriverDetails() {
             Vehicle Details
           </button>
           <button
-            className={`px-6 py-2 font-medium ${
-              activeTab === "documents"
+  className={`whitespace-nowrap px-6  py-2 font-medium lg:text-md text-xs ${
+    activeTab === "documents"
                 ? "text-blue-600 border-b-2 border-blue-600"
                 : "text-gray-500 hover:text-gray-700"
             }`}

@@ -108,7 +108,7 @@ export default function DriverListTable() {
       </h1>
 
       {/* Tabs */}
-      <div className="flex flex-wrap border-b border-gray-200 mb-6">
+      <div className="flex flex-nowrap border-b  border-gray-200 mb-6">
         {["All", ...statusOptions].map((status) => (
           <button
             key={status}
@@ -150,19 +150,19 @@ export default function DriverListTable() {
               <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
                 No.
               </th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
+              <th className="py-3 px-4 text-nowrap text-left lg:text-md text-sm  font-semibold text-gray-600 border-b">
                 Empployee No.
               </th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
+              <th className="py-3 px-4 text-nowrap text-left lg:text-md text-sm font-semibold text-gray-600 border-b">
                 First Name
               </th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
+              <th className="py-3 px-4 text-nowrap text-left lg:text-md text-sm font-semibold text-gray-600 border-b">
                 Email
               </th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
+              <th className="py-3 px-4 text-nowrap text-left lg:text-md text-sm font-semibold text-gray-600 border-b">
                 Car Make
               </th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
+              <th className="py-3 px-4 text-nowrap text-left lg:text-md text-sm font-semibold text-gray-600 border-b">
                 Car Model
               </th>
               <th className="py-3 px-4 text-left font-semibold text-gray-600 border-b">
