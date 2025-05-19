@@ -1,6 +1,6 @@
   import axios from 'axios';
 
-  const API_URL = 'http://localhost:5000/api/driver';
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   export const getAllDrivers = () => axios.get(`${API_URL}/getAll-drivers`);
   export const deleteDriver = (id) => axios.delete(`${API_URL}/delete-drivers/${id}`);
