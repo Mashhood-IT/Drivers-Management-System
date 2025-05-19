@@ -8,7 +8,10 @@ const driverRoutes = require("./routes/driverRoutes");
 const methodOverride = require("method-override");
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+  origin: 'https://dms-frontend.netlify.app', // allow frontend to talk to backend
+  credentials: true // only if you're using cookies or sessions
+}));
 app.use(methodOverride("_method")); 
 app.use("/api/driver", driverRoutes);
 
