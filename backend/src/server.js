@@ -18,6 +18,9 @@ app.use("/api/driver", driverRoutes);
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(process.env.PORT);
+    console.log("db connected")
+    app.listen(process.env.PORT , () =>{
+      console.log("port connected")
+    });
   })
   .catch((err) => console.error(err));
