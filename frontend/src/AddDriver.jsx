@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { User } from "lucide-react";
 import { toast } from "react-toastify";
-import DriverDetails from "./driverDetails/DriverDetails";
 import VehicleDetails from "./driverDetails/VehicleDetails";
 import { createDriver } from "./utilities/Api";
+import { Link, useNavigate } from "react-router-dom";
+import DriverPersonalDetails from "./driverDetails/DriverPersonalDetails";
 
 export default function AddDriver() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
+    motExpiryDate : "",
     employeeNumber: "",
     status: "",
     firstName: "",
@@ -39,92 +43,126 @@ export default function AddDriver() {
     contact: "",
     driverLicense: "",
     driverLicenseExpiry: "",
+    availability: [{ from: "", to: "" }]
   });
 
   const [filePreviews, setFilePreviews] = useState({});
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e, index = null, field = null) => {
     const { name, type, files, value } = e.target;
-
+  
+    if (name.startsWith("availability") && index !== null) {
+      setFormData((prev) => {
+        const updatedAvailability = [...prev.availability];
+        updatedAvailability[index][field] = value;
+        return {
+          ...prev,
+          availability: updatedAvailability,
+        };
+      });
+      return;
+    }
+  
     if (type === "file") {
       const file = files[0];
-      const allowedTypes = [
-        "application/pdf",
-        "image/jpeg",
-        "image/png",
-        "image/jpg",
-      ];
-
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
       if (file && !allowedTypes.includes(file.type)) {
         toast.error("Only PDF, JPEG, PNG, JPG files are supported.");
         return;
       }
-
-      setFormData((prev) => ({
-        ...prev,
-        [name]: file,
-      }));
-
+  
+      setFormData((prev) => ({ ...prev, [name]: file }));
       setFilePreviews((prev) => ({
         ...prev,
         [name]: file ? URL.createObjectURL(file) : "",
       }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+   const handleAddAvailability = () => {
+      if (formData.availability.length < 3) {
+        setFormData((prev) => ({
+          ...prev,
+          availability: [...prev.availability, { from: "", to: "" }],
+        }));
+      }
+    };
+    
+    const handleRemoveAvailability = (index) => {
+      setFormData((prev) => ({
+        ...prev,
+        availability: prev.availability.filter((_, i) => i !== index),
+      }));
+    };
 
+  
+  
+  
   const handleCheckboxChange = (e) => {
     const { id, checked } = e.target;
-    if (checked) {
-      setFormData((prev) => ({
+    setFormData((prev) => {
+      const updatedVehicleTypes = checked
+        ? [...prev.vehicleTypes, id] // Add vehicle type if checked
+        : prev.vehicleTypes.filter((type) => type !== id); // Remove vehicle type if unchecked
+  
+      return {
         ...prev,
-        vehicleTypes: prev.vehicleTypes ? `${prev.vehicleTypes},${id}` : id,
-      }));
-    } else {
-      const updatedTypes = formData.vehicleTypes
-        .split(",")
-        .filter((type) => type !== id)
-        .join(",");
-      setFormData((prev) => ({
-        ...prev,
-        vehicleTypes: updatedTypes,
-      }));
-    }
+        vehicleTypes: updatedVehicleTypes, // Update vehicleTypes array
+      };
+    });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== "") {
-        form.append(key, value);
-      }
-    });
-
+  
     try {
+      const form = new FormData();
+  
+      // Append fields correctly
+      Object.keys(formData).forEach((key) => {
+        const value = formData[key];
+        if (
+          key === 'availability' ||
+          key === 'nominatedDrivers' ||
+          key === 'experienceHistory'
+        ) {
+          form.append(key, JSON.stringify(value));
+        } else if (value instanceof File || value instanceof Blob) {
+          form.append(key, value);
+        } else if (value !== "" && value !== null && value !== undefined) {
+          form.append(key, value);
+        }
+      });
+  
       await createDriver(form);
       toast.success("Driver profile saved successfully!");
+      navigate("/DriverListTable")
     } catch (error) {
       console.error("Error creating driver:", error);
+      toast.error(
+        error?.response?.data?.message || 
+        error?.response?.data?.error || 
+        "Something went wrong"
+      );
+      
 
-      if (error.response && error.response.data && error.response.data.error) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error("Failed to save driver profile.");
-      }
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
+    <>
     <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
+     <div className=" my-4">
+        <Link to="/DriverListTable">
+          <button className=" px-4 py-2 cursor-pointer font-semibold text-white bg-black">
+            Back to Drivers List{" "}
+          </button>
+        </Link>
+        </div>
       <div className="flex items-center mb-8">
         <div className="bg-blue-600 rounded-full p-3 mr-4">
           <User size={24} className="text-white" />
@@ -134,7 +172,9 @@ export default function AddDriver() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="bg-gray-50 p-6 rounded-lg">
-          <DriverDetails
+          <DriverPersonalDetails
+          handleAddAvailability={handleAddAvailability}
+          handleRemoveAvailability={handleRemoveAvailability}
             formData={formData}
             setFormData={setFormData}
             handleInputChange={handleInputChange}
@@ -154,27 +194,7 @@ export default function AddDriver() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between pt-6 border-t border-gray-200">
-          <div className="mb-4 md:mb-0 w-full md:w-1/3">
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={formData.status || ""}
-              onChange={handleInputChange}
-            >
-              <option value="">Select Status</option>
-              <option value="Active">Active</option>
-              <option value="Delete">Delete</option>
-              <option value="Pending">Pending</option>
-              <option value="Suspended">Suspended</option>
-            </select>
-          </div>
+      
 
           <button
             type="submit"
@@ -183,12 +203,13 @@ export default function AddDriver() {
               loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
+              }`}
+              >
             {loading ? "Saving..." : "Save Driver Profile"}
           </button>
         </div>
       </form>
     </div>
+            </>
   );
 }

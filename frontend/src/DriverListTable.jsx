@@ -13,17 +13,15 @@ import { toast } from "react-toastify";
 
 export default function DriverListTable() {
   const [drivers, setDrivers] = useState([]);
-  const [activeTab, setActiveTab] = useState("Active");
+  const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-
   const handleDelete = async (id) => {
     try {
 
       const driver = drivers.find((d) => d._id === id);
       if (!driver) return;
   
-      // Show confirm only if status is "Delete"
-      if (driver.status === "Delete") {
+      if (driver.status === "Deleted") {
         const confirmed = window.confirm("Are you sure you want to delete this driver?");
         if (!confirmed) return;
       }
@@ -45,8 +43,8 @@ export default function DriverListTable() {
         setDrivers(response.data);
       })
       .catch((error) => console.error("Error fetching driver data:", error));
-  }, [handleDelete]);
-
+  }, [handleDelete]); 
+  
   const filteredDrivers = drivers.filter((driver) => {
     if (driver.status !== activeTab && activeTab !== "All") return false;
 
@@ -99,7 +97,7 @@ export default function DriverListTable() {
   };
 
   // Status options
-  const statusOptions = ["Active", "Suspended", "Pending", "Delete"];
+  const statusOptions = ["Active", "Suspended", "Pending", "Deleted"];
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-6xl mx-auto">
@@ -112,7 +110,7 @@ export default function DriverListTable() {
         {["All", ...statusOptions].map((status) => (
           <button
             key={status}
-            className={`px-4 py-2 font-medium text-sm transition-colors duration-200
+            className={`px-4 py-2 font-medium lg:text-sm text-xs transition-colors duration-200
             ${
               activeTab === status
                 ? "text-blue-600 border-b-2 border-blue-600 -mb-px"
@@ -270,8 +268,10 @@ function getStatusColorClass(status) {
   switch (status) {
     case "Active":
       return "text-green-800";
-    case "Delete":
+    case "Deleted":
       return "text-red-800";
+    case "Expired":
+      return "text-red-900";
     case "Suspended":
       return "text-yellow-800";
     case "Pending":

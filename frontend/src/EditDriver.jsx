@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { updateDriver } from "./utilities/Api";
+import { getUserById ,  updateDriver } from "./utilities/Api";
 import { toast } from "react-toastify";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import DriverPersonalDetails from "./driverDetails/DriverPersonalDetails";
+import VehicleDetails from "./driverDetails/VehicleDetails";
 
 const EditDriver = () => {
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
-
+const navigate = useNavigate()
   const [formData, setFormData] = useState({
+    motExpiryDate: "",
     status: "",
     firstName: "",
     surName: "",
@@ -28,7 +31,7 @@ const EditDriver = () => {
     V5: "",
     email: "",
     address: "",
-    vehicleTypes: "",
+    vehicleTypes: [],
     carMake: "",
     carModal: "",
     carColor: "",
@@ -39,43 +42,89 @@ const EditDriver = () => {
     driverLicense: "",
     driverLicenseExpiry: "",
     employeeNumber: "",
+    availability: [{ from: "", to: "" }],
   });
 
+  const handleInputChange = (e, index, field) => {
+    const { name, type, value, files } = e.target;
 
+    if (type === "file") {
+      const file = files?.[0];
+      if (file) {
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+          toast.error("Only PDF and JPEG/PNG files are supported.");
+          return;
+        }
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: file,
+        }));
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    const file = files?.[0];
-
-    if (file) {
-      const allowedTypes = ["application/pdf", "image/jpeg"];
-
-      if (!allowedTypes.includes(file.type)) {
-        toast.error("Only PDF and JPEG files are supported.");
+        if (file.type.startsWith("image/")) {
+          const previewUrl = URL.createObjectURL(file);
+          setFilePreviews((prevPreviews) => ({
+            ...prevPreviews,
+            [name]: previewUrl,
+          }));
+        } else {
+          setFilePreviews((prevPreviews) => ({
+            ...prevPreviews,
+            [name]: null,
+          }));
+        }
         return;
       }
+    }
 
+    if (index !== undefined && field) {
+      const updatedAvailability = [...formData.availability];
+      updatedAvailability[index] = {
+        ...updatedAvailability[index],
+        [field]: value,
+      };
       setFormData((prevData) => ({
         ...prevData,
-        [name]: file,
+        availability: updatedAvailability,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
       }));
     }
   };
+
+  const handleAddAvailability = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      availability: [...prevData.availability, { from: "", to: "" }],
+    }));
+  };
+
+  const handleRemoveAvailability = (index) => {
+    const updatedAvailability = [...formData.availability];
+    updatedAvailability.splice(index, 1);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      availability: updatedAvailability,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const form = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
-      if (value) {
+      if (key === "availability") {
+        value.forEach((slot, index) => {
+          form.append(`availability[${index}].from`, slot.from);
+          form.append(`availability[${index}].to`, slot.to);
+        });
+      } else if (value) {
         form.append(key, value);
       }
     });
@@ -83,6 +132,7 @@ const EditDriver = () => {
     try {
       await updateDriver(id, form);
       toast.success("Driver profile updated successfully!");
+      navigate("/DriverListTable")
     } catch (error) {
       console.error("Error updating driver:", error);
       toast.error("Failed to update driver profile.");
@@ -91,11 +141,54 @@ const EditDriver = () => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    const { id, checked } = e.target;
+  
+    setFormData((prev) => {
+      const currentTypes = prev.vehicleTypes || [];
+  
+      if (checked) {
+        return {
+          ...prev,
+          vehicleTypes: [...currentTypes, id],
+        };
+      } else {
+        return {
+          ...prev,
+          vehicleTypes: currentTypes.filter((type) => type !== id),
+        };
+      }
+    });
+  };
+  
+  
+  const [filePreviews, setFilePreviews] = useState({});
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const response = await getUserById(id);
+        console.log("Fetched driver data:", response.data); // 👈 Add this
+        setFormData(response.data.driver);
+      } catch (error) {
+        console.error("Failed to fetch driver data:", error);
+        toast.error("Failed to fetch driver data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (id) fetchUser();
+  }, [id]);
+  
+  
   return (
     <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg">
-      <div className=" my-4">
-        <Link to="/">
-          <button className=" px-4 py-2 font-semibold text-white bg-black">
+      <div className="my-4">
+        <Link to="/DriverListTable">
+          <button className="px-4 py-2 font-semibold text-white bg-black">
             Back to Drivers List{" "}
           </button>
         </Link>
@@ -107,228 +200,41 @@ const EditDriver = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* Personal Information */}
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <div className="w-full md:w-1/2">
-              <label
-                htmlFor="firstName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                First Name
-              </label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={formData.firstName}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="w-full md:w-1/2">
-              <label
-                htmlFor="employeeNumber"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Employee Number
-              </label>
-              <input
-                id="employeeNumber"
-                name="employeeNumber"
-                type="text"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={formData.employeeNumber}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="w-full md:w-1/2">
-              <label
-                htmlFor="surName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Surname
-              </label>
-              <input
-                id="surName"
-                name="surName"
-                type="text"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={formData.surName}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <div className="w-full md:w-1/2">
-              <label
-                htmlFor="dateOfBirth"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Date of Birth
-              </label>
-              <input
-                id="dateOfBirth"
-                name="dateOfBirth"
-                type="date"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={formData.dateOfBirth?.substring(0, 10) || ""}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="w-full md:w-1/2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div className="w-full">
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Address
-            </label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              className="w-full border border-gray-300 rounded-md p-2"
-              value={formData.address}
-              onChange={handleInputChange}
-            />
-          </div>
+        <div className="bg-gray-50 p-6 rounded-lg">
+          <DriverPersonalDetails
+            handleAddAvailability={handleAddAvailability}
+            handleRemoveAvailability={handleRemoveAvailability}
+            formData={formData}
+            setFormData={setFormData}
+            handleInputChange={handleInputChange}
+            handleCheckboxChange={handleCheckboxChange}
+            filePreviews={filePreviews}
+          />
         </div>
 
-        <div className="space-y-6 mt-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Image Uploads
-          </h2>
-          {[
-            { label: "Driver Picture", name: "driverPicture" },
-            { label: "Car Picture", name: "carPicture" },
-          ].map(({ label, name }) => (
-            <div key={name}>
-              <label
-                htmlFor={name}
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                {label}
-              </label>
-              {typeof formData[name] === "string" && formData[name] && (
-                <img
-                  src={formData[name]}
-                  alt={name}
-                  className="w-24 h-24 object-cover rounded-md mb-2"
-                />
-              )}
-              <input
-                id={name}
-                name={name}
-                type="file"
-                accept="image/*"
-                className="w-full border border-gray-300 rounded-md p-2"
-                onChange={handleFileChange}
-              />
-            </div>
-          ))}
+        <div className="bg-gray-50 p-6 rounded-lg">
+          <VehicleDetails
+            formData={formData}
+            setFormData={setFormData}
+            handleInputChange={handleInputChange}
+            handleCheckboxChange={handleCheckboxChange}
+            filePreviews={filePreviews}
+          />
         </div>
 
-        {/* PDF Uploads with Preview Link */}
-        <div className="space-y-6 mt-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            PDF Uploads
-          </h2>
-          {[
-            { label: "Private Hire Card", name: "privateHireCard" },
-            { label: "DVLA Card", name: "dvlaCard" },
-            { label: "Insurance", name: "insurance" },
-            { label: "Driver Picture", name: "driverPicture" },
-            { label: "Car Picture", name: "carPicture" },
-            { label: "Private Hire Car Paper", name: "privateHireCarPaper" },
-            {
-              label: "Driver Private Hire Paper",
-              name: "driverPrivateHirePaper",
-            },
-            { label: "MOT Expiry", name: "motExpiry" },
-            { label: "V5", name: "V5" },
-          ].map(({ label, name }) => (
-            <div key={name}>
-              <label
-                htmlFor={name}
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                {label}
-              </label>
-              {typeof formData[name] === "string" && formData[name] && (
-                <a
-                  href={formData[name]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline block mb-2"
-                >
-                  View uploaded file
-                </a>
-              )}
-              <input
-                id={name}
-                name={name}
-                type="file"
-                accept="application/pdf"
-                className="w-full border border-gray-300 rounded-md p-2"
-                onChange={handleFileChange}
-              />
-            </div>
-          ))}
-        </div>
-        {/* Status */}
-        <div className="mt-6">
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Status
-          </label>
-          <select
-            id="status"
-            name="status"
-            className="w-full border border-gray-300 rounded-md p-2 text-gray-900"
-            value={formData.status || ""}
-            onChange={handleInputChange}
-          >
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Delete">Delete</option>
-            <option value="Pending">Pending</option>
-            <option value="Suspended">Suspended</option>
-          </select>
-        </div>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between pt-6 border-t border-gray-200">
+       
 
-        {/* Submit Button */}
-        <div className="mt-6 flex justify-center">
           <button
             type="submit"
             disabled={loading}
-            className={`py-2 px-6 rounded-md transition-colors ${
+            className={`py-3 px-8 rounded-lg text-white font-medium transition-colors ${
               loading
-                ? "cursor-progress bg-gray-400 text-black"
-                : "cursor-pointer bg-blue-500 text-white hover:bg-blue-600"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Saving..." : "Save Driver Profile"}
           </button>
         </div>
       </form>
