@@ -248,8 +248,11 @@ checked={formData.vehicleTypes.includes(type.toLowerCase().replace(/ /g, ""))}
               <input
                 name="driverPrivateHireLicenseExpiry"
                 type="date"
-                value={formData.driverPrivateHireLicenseExpiry || ""}
-                onChange={handleInputChange}
+                value={
+                  formData.driverPrivateHireLicenseExpiry
+                    ? formData.driverPrivateHireLicenseExpiry.split("T")[0]
+                    : ""
+                }                onChange={handleInputChange}
                 className="w-full border border-gray-300 p-2.5 rounded-lg "
                 placeholder="Enter license number"
               />
