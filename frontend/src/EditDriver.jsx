@@ -14,7 +14,6 @@ const navigate = useNavigate()
     status: "",
     firstName: "",
     surName: "",
-    driverPrivateHireLicense: "",
     driverPrivateHireLicenseExpiry: "",
     driverPicture: "",
     privateHireCardNo: "",

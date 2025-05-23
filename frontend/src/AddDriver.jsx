@@ -16,7 +16,6 @@ export default function AddDriver() {
     status: "",
     firstName: "",
     surName: "",
-    driverPrivateHireLicense: "",
     driverPrivateHireLicenseExpiry: "",
     driverPicture: "",
     privateHireCardNo: "",

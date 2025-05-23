@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Search,
-  Eye,
-  Trash,
-  Edit,
-  Plus,
-} from "lucide-react";
+import { Search, Eye, Trash, Edit, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { deleteDriver, getAllDrivers } from "./utilities/Api";
 import { downloadCSV } from "./utilities/downloadCSV";
@@ -17,12 +11,13 @@ export default function DriverListTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const handleDelete = async (id) => {
     try {
-
       const driver = drivers.find((d) => d._id === id);
       if (!driver) return;
-  
+
       if (driver.status === "Deleted") {
-        const confirmed = window.confirm("Are you sure you want to delete this driver?");
+        const confirmed = window.confirm(
+          "Are you sure you want to delete this driver?"
+        );
         if (!confirmed) return;
       }
       await deleteDriver(id);
@@ -43,8 +38,8 @@ export default function DriverListTable() {
         setDrivers(response.data);
       })
       .catch((error) => console.error("Error fetching driver data:", error));
-  }, [handleDelete]); 
-  
+  }, [handleDelete]);
+
   const filteredDrivers = drivers.filter((driver) => {
     if (driver.status !== activeTab && activeTab !== "All") return false;
 
@@ -72,7 +67,7 @@ export default function DriverListTable() {
     );
 
     const carHeaders = ["VRM", "Vehicle Make", "Vehicle License Number"];
-    const carKeys = ["carRegistration", "carMake", "privateHireCardNo"];
+    const carKeys = ["carRegistration", "carMake", "carPrivateHireLicense"];
     downloadCSV(selectedDrivers, carHeaders, carKeys, "CarDetails.csv");
 
     const driverHeaders = [
@@ -80,7 +75,7 @@ export default function DriverListTable() {
       "Forename",
       "Surname",
     ];
-    const driverKeys = ["driverPrivateHireLicense", "firstName", "surName"];
+    const driverKeys = ["privateHireCardNo", "firstName", "surName"];
     downloadCSV(
       selectedDrivers,
       driverHeaders,

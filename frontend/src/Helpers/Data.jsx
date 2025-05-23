@@ -52,16 +52,6 @@ export  const TEXT_FIELDS = [
   { key: "contact", label: "Contact", icon: <Phone /> },
   { key: "address", label: "Address", icon: <MapPin /> },
   { key: "dateOfBirth", label: "Date of Birth", icon: <Calendar /> },
-  {
-    key: "driverPrivateHireLicense",
-    label: "Driver Private Hire License",
-    icon: <Award />,
-  },
-  {
-    key: "driverPrivateHireLicenseExpiry",
-    label: "Driver Private Hire License Expiry",
-    icon: <Clock />,
-  },
   { key: "driverLicense", label: "Driver License", icon: <FileText /> },
   {
     key: "driverLicenseExpiry",
@@ -73,6 +63,12 @@ export  const TEXT_FIELDS = [
     label: "Private Hire Card Number",
     icon: <CreditCard />,
   },
+  {
+    key: "driverPrivateHireLicenseExpiry",
+    label: "Driver Private Hire License Expiry",
+    icon: <Award />,
+  },
+ 
   { key: "NationalInsurance", label: "National Insurance", icon: <Shield /> },
   {
     key: "availability",

@@ -243,12 +243,12 @@ checked={formData.vehicleTypes.includes(type.toLowerCase().replace(/ /g, ""))}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Private Hire License
+                Driver Private Hire License Expiry
               </label>
               <input
-                name="driverPrivateHireLicense"
+                name="driverPrivateHireLicenseExpiry"
                 type="date"
-                value={formData.driverPrivateHireLicense || ""}
+                value={formData.driverPrivateHireLicenseExpiry || ""}
                 onChange={handleInputChange}
                 className="w-full border border-gray-300 p-2.5 rounded-lg "
                 placeholder="Enter license number"
@@ -267,21 +267,7 @@ checked={formData.vehicleTypes.includes(type.toLowerCase().replace(/ /g, ""))}
               placeholder="Enter NI number"
             />
           </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-              Private Hire License Expiry
-              </label>
-              <div className="flex items-center border border-gray-300 p-2.5 rounded-lg ">
-                <Calendar size={18} className="text-gray-400 mr-2" />
-                <input
-                  type="date"
-                  name="driverPrivateHireLicenseExpiry"
-                  value={formData.driverPrivateHireLicenseExpiry.split("T")[0] || ""}
-                  onChange={handleInputChange}
-                  className="flex-1 outline-none"
-                />
-              </div>
-            </div>
+           
           </div>
 
      

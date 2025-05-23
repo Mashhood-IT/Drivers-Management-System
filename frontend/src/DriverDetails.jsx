@@ -105,8 +105,9 @@ export default function DriverDetails() {
   
     const key = field.key.toLowerCase();
     const isDateField = key.includes("date") || key.includes("expiry");
-    const isExpired = isDateField && value && new Date(value) < new Date();
-  
+    const EXPIRY_KEYS = ["motExpiryDate", "driverLicenseExpiry", "carInsuranceExpiry", "carPrivateHireLicenseExpiry"]; // adjust based on your field keys
+    const isExpired = EXPIRY_KEYS.includes(field.key) && value && new Date(value) < new Date();
+      
     const renderFieldValue = (key, value) => {
       if (!value) return <span className="text-gray-400 italic">Not provided</span>;
       if (Array.isArray(value)) return value.join(", ");

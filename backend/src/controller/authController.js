@@ -26,10 +26,11 @@ const loginAdmin = async (req, res) => {
       token,
       user: { id: user._id, email: user.email },
     });
-  } catch (error) {
-    console.error("Login error:", error.message, error.stack);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
+     } catch (error) {
+  console.error("Login error:", error.message, error.stack);  // improved logging
+  res.status(500).json({ message: "Server error", error: error.message }); // better client response
+}
+
 };
 
 module.exports = { loginAdmin };

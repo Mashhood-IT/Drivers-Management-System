@@ -11,7 +11,6 @@ const createDriver = async (req, res) => {
       status,
       firstName,
       surName,
-      driverPrivateHireLicense,
       driverPrivateHireLicenseExpiry,
       privateHireCardNo,
       dateOfBirth,
@@ -71,16 +70,13 @@ parsedAvailability = parsedAvailability.map(item => ({
 
 
 
-const checkDriverPrivateHireLicenseExpiry =new Date(driverPrivateHireLicenseExpiry) < new Date()
 const checkCarPrivateHireLicenseExpiry = new Date(carPrivateHireLicenseExpiry) < new Date()
 const checkCarInsuranceExpiry = new Date(carInsuranceExpiry) < new Date()
 const checkDriverLicenseExpiry = new Date(driverLicenseExpiry) < new Date()
 const checkmotExpiryDate = new Date(motExpiryDate) < new Date()
+const checkdriverPrivateHireLicenseExpiry = new Date(driverPrivateHireLicenseExpiry) < new Date()
 
 
-if(checkDriverPrivateHireLicenseExpiry){
-  return res.status(500).json({message: "Driver Private Hire License is expired"})
-}
 if(checkCarPrivateHireLicenseExpiry){
   return res.status(500).json({message: "Car Private Hire License is expired"})
 }
@@ -93,6 +89,9 @@ if(checkDriverLicenseExpiry){
 if(checkmotExpiryDate){
   return res.status(500).json({message: "MOT  is expired"})
 }
+if(checkdriverPrivateHireLicenseExpiry){
+  return res.status(500).json({message: "Driver Private Hire License   is expired"})
+}
 
 
 
@@ -102,7 +101,6 @@ if(checkmotExpiryDate){
       !status ||
       !firstName ||
       !surName ||
-      !driverPrivateHireLicense ||
       !driverPrivateHireLicenseExpiry ||
       !privateHireCardNo ||
       !dateOfBirth ||
@@ -131,7 +129,6 @@ if(checkmotExpiryDate){
       status,
       firstName,
       surName,
-      driverPrivateHireLicense,
       driverPrivateHireLicenseExpiry,
       driverPicture: driverPicturePath,
       privateHireCardNo,
@@ -195,18 +192,18 @@ const getAllDrivers = async (req, res) => {
     // Iterate over all drivers to check if any documents have expired
     const updatedDrivers = await Promise.all(drivers.map(async (driver) => {
       const {
-        driverPrivateHireLicenseExpiry,
         carPrivateHireLicenseExpiry,
         carInsuranceExpiry,
         driverLicenseExpiry,
         motExpiryDate,
+        driverPrivateHireLicenseExpiry
       } = driver;
 
       const isExpired =
-        new Date(driverPrivateHireLicenseExpiry) < currentDate ||
         new Date(carPrivateHireLicenseExpiry) < currentDate ||
         new Date(carInsuranceExpiry) < currentDate ||
         new Date(driverLicenseExpiry) < currentDate ||
+        new Date(driverPrivateHireLicenseExpiry) < currentDate ||
         new Date(motExpiryDate) < currentDate;
 
       // If expired, update the status to 'Expired' and save it in the database
