@@ -54,15 +54,6 @@ if (typeof availability === "string") {
   }
 }
 
-if (
-  !Array.isArray(parsedAvailability) ||
-  !parsedAvailability.length ||
-  !parsedAvailability[0].from ||
-  !parsedAvailability[0].to
-) {
-  return res.status(400).json({ error: "At least one availability period is required." });
-}
-
 parsedAvailability = parsedAvailability.map(item => ({
   from: new Date(item.from),
   to: new Date(item.to),
@@ -70,58 +61,58 @@ parsedAvailability = parsedAvailability.map(item => ({
 
 
 
-const checkCarPrivateHireLicenseExpiry = new Date(carPrivateHireLicenseExpiry) < new Date()
-const checkCarInsuranceExpiry = new Date(carInsuranceExpiry) < new Date()
-const checkDriverLicenseExpiry = new Date(driverLicenseExpiry) < new Date()
-const checkmotExpiryDate = new Date(motExpiryDate) < new Date()
-const checkdriverPrivateHireLicenseExpiry = new Date(driverPrivateHireLicenseExpiry) < new Date()
+// const checkCarPrivateHireLicenseExpiry = new Date(carPrivateHireLicenseExpiry) < new Date()
+// const checkCarInsuranceExpiry = new Date(carInsuranceExpiry) < new Date()
+// const checkDriverLicenseExpiry = new Date(driverLicenseExpiry) < new Date()
+// const checkmotExpiryDate = new Date(motExpiryDate) < new Date()
+// const checkdriverPrivateHireLicenseExpiry = new Date(driverPrivateHireLicenseExpiry) < new Date()
 
 
-if(checkCarPrivateHireLicenseExpiry){
-  return res.status(500).json({message: "Car Private Hire License is expired"})
-}
-if(checkCarInsuranceExpiry){
-  return res.status(500).json({message: "Car Insurance is expired"})
-}
-if(checkDriverLicenseExpiry){
-  return res.status(500).json({message: "Driver License is expired"})
-}
-if(checkmotExpiryDate){
-  return res.status(500).json({message: "MOT  is expired"})
-}
-if(checkdriverPrivateHireLicenseExpiry){
-  return res.status(500).json({message: "Driver Private Hire License   is expired"})
-}
+// if(checkCarPrivateHireLicenseExpiry){
+//   return res.status(500).json({message: "Car Private Hire License is expired"})
+// }
+// if(checkCarInsuranceExpiry){
+//   return res.status(500).json({message: "Car Insurance is expired"})
+// }
+// if(checkDriverLicenseExpiry){
+//   return res.status(500).json({message: "Driver License is expired"})
+// }
+// if(checkmotExpiryDate){
+//   return res.status(500).json({message: "MOT  is expired"})
+// }
+// if(checkdriverPrivateHireLicenseExpiry){
+//   return res.status(500).json({message: "Driver Private Hire License   is expired"})
+// }
 
 
 
-    // Check required fields
-    if ( !motExpiryDate ||
-      !employeeNumber ||
-      !status ||
-      !firstName ||
-      !surName ||
-      !driverPrivateHireLicenseExpiry ||
-      !privateHireCardNo ||
-      !dateOfBirth ||
-      !carRegistration ||
-      !email ||
-      !address ||
-      !vehicleTypes ||
-      !carMake ||
-      !carModal ||
-      !carColor ||
-      !carPrivateHireLicense ||
-      !carPrivateHireLicenseExpiry ||
-      !carInsuranceExpiry ||
-      !contact ||
-      !driverLicense ||
-      !driverLicenseExpiry ||
-      !NationalInsurance 
+    // // Check required fields
+    // if ( !motExpiryDate ||
+    //   !employeeNumber ||
+    //   !status ||
+    //   !firstName ||
+    //   !surName ||
+    //   !driverPrivateHireLicenseExpiry ||
+    //   !privateHireCardNo ||
+    //   !dateOfBirth ||
+    //   !carRegistration ||
+    //   !email ||
+    //   !address ||
+    //   !vehicleTypes ||
+    //   !carMake ||
+    //   !carModal ||
+    //   !carColor ||
+    //   !carPrivateHireLicense ||
+    //   !carPrivateHireLicenseExpiry ||
+    //   !carInsuranceExpiry ||
+    //   !contact ||
+    //   !driverLicense ||
+    //   !driverLicenseExpiry ||
+    //   !NationalInsurance 
       
-    ) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
+    // ) {
+    //   return res.status(400).json({ error: "All fields are required" });
+    // }
 
     const newDriver = new Driver({
       motExpiryDate,
