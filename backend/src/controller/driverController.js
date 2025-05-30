@@ -43,24 +43,24 @@ const createDriver = async (req, res) => {
     const V5Path = req.files["V5"]?.[0]?.path || null;
 
   // Check if availability is an array, not a string
-let parsedAvailability = availability;
+  let parsedAvailability = availability;
 
-// If it's a string, parse it (for safety)
-if (typeof availability === "string") {
-  try {
-    parsedAvailability = JSON.parse(availability);
-  } catch (err) {
-    return res.status(400).json({ error: "Invalid availability format" });
+  // If it's a string, parse it (for safety)
+  if (typeof availability === "string") {
+    try {
+      parsedAvailability = JSON.parse(availability);
+    } catch (err) {
+      return res.status(400).json({ error: "Invalid availability format" });
+    }
   }
-}
-
-parsedAvailability = parsedAvailability.map(item => ({
-  from: new Date(item.from),
-  to: new Date(item.to),
-}));
-
-
-
+  
+  parsedAvailability = parsedAvailability.map(item => ({
+    from: new Date(item.from),
+    to: new Date(item.to),
+  }));
+  
+  
+  
 // const checkCarPrivateHireLicenseExpiry = new Date(carPrivateHireLicenseExpiry) < new Date()
 // const checkCarInsuranceExpiry = new Date(carInsuranceExpiry) < new Date()
 // const checkDriverLicenseExpiry = new Date(driverLicenseExpiry) < new Date()
