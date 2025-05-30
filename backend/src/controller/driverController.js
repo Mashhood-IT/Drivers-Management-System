@@ -42,24 +42,41 @@ const createDriver = async (req, res) => {
     const motExpiryPath = req.files["motExpiry"]?.[0]?.path || null;
     const V5Path = req.files["V5"]?.[0]?.path || null;
 
-  // Check if availability is an array, not a string
-  let parsedAvailability = availability;
-
-  // If it's a string, parse it (for safety)
-  if (typeof availability === "string") {
-    try {
-      parsedAvailability = JSON.parse(availability);
-    } catch (err) {
-      return res.status(400).json({ error: "Invalid availability format" });
+    let parsedAvailability = [];
+    
+    if (availability && Array.isArray(availability) && availability.length > 0) {
+      // Filter out empty availability objects
+      const validAvailability = availability.filter(item => 
+        item.from && item.to && item.from.trim() !== "" && item.to.trim() !== ""
+      );
+      
+      if (validAvailability.length > 0) {
+        parsedAvailability = validAvailability.map(item => ({
+          from: new Date(item.from),
+          to: new Date(item.to),
+        }));
+      }
+    } else if (typeof availability === "string" && availability.trim() !== "") {
+      try {
+        const parsed = JSON.parse(availability);
+        if (Array.isArray(parsed)) {
+          const validAvailability = parsed.filter(item => 
+            item.from && item.to && item.from.trim() !== "" && item.to.trim() !== ""
+          );
+          
+          if (validAvailability.length > 0) {
+            parsedAvailability = validAvailability.map(item => ({
+              from: new Date(item.from),
+              to: new Date(item.to),
+            }));
+          }
+        }
+      } catch (err) {
+        // If parsing fails, keep parsedAvailability as empty array
+        console.log("Failed to parse availability, using empty array");
+      }
     }
-  }
-  
-  parsedAvailability = parsedAvailability.map(item => ({
-    from: new Date(item.from),
-    to: new Date(item.to),
-  }));
-  
-  
+
   
 // const checkCarPrivateHireLicenseExpiry = new Date(carPrivateHireLicenseExpiry) < new Date()
 // const checkCarInsuranceExpiry = new Date(carInsuranceExpiry) < new Date()
