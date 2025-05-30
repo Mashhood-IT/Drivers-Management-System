@@ -125,8 +125,7 @@ const VehicleDetails = ({ formData = {}, handleInputChange = () => {}, filePrevi
                   <input
                     type="date"
                     name="motExpiryDate"
-                    value={formData.motExpiryDate.split("T")[0] || ""}
-                    onChange={handleInputChange}
+                    value={formData.motExpiryDate ? formData.motExpiryDate.split("T")[0] : ""}                    onChange={handleInputChange}
                     className="w-full border border-gray-300 p-3 pl-12 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
                 </div>
@@ -139,7 +138,7 @@ const VehicleDetails = ({ formData = {}, handleInputChange = () => {}, filePrevi
                   <input
                     type="date"
                     name="carInsuranceExpiry"
-                    value={formData.carInsuranceExpiry.split("T")[0] || ""}
+                    value={formData.carInsuranceExpiry ? formData.carInsuranceExpiry.split("T")[0] : ""}
                     onChange={handleInputChange}
                     className="w-full border border-gray-300 p-3 pl-12 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
@@ -153,7 +152,7 @@ const VehicleDetails = ({ formData = {}, handleInputChange = () => {}, filePrevi
                   <input
   type="date"
   name="carPrivateHireLicenseExpiry"
-  value={formData.carPrivateHireLicenseExpiry.split("T")[0] || ""}
+  value={formData.carPrivateHireLicenseExpiry ? formData.carPrivateHireLicenseExpiry.split("T")[0] : ""}
   onChange={handleInputChange}
   className="w-full border border-gray-300 p-3 pl-12 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
 />
