@@ -14,25 +14,25 @@ import {
     CheckCircle,
     PersonStanding,
   } from "lucide-react";
-export const FILE_FIELDS = [
-  { key: "driverPicture", label: "Driver Picture", icon: <User /> },
-  { key: "privateHireCard", label: "Private Hire  Card", icon: <CreditCard /> },
-  { key: "dvlaCard", label: "DVLA Card", icon: <CreditCard /> },
-  { key: "carPicture", label: "Car Picture", icon: <Car /> },
-  {
-    key: "privateHireCarPaper",
-    label: "Private Hire Car Paper",
-    icon: <FileText />,
-  },
-  {
-    key: "driverPrivateHirePaper",
-    label: "Driver Private Hire Paper",
-    icon: <CreditCard />,
-  },
-  { key: "insurance", label: "Insurance", icon: <Shield /> },
-  { key: "motExpiry", label: "MOT Expiry", icon: <Shield /> },
-  { key: "V5", label: "V5", icon: <Shield /> },
-];
+  export const FILE_FIELDS = [
+    { key: "driverPicture", label: "Driver Picture", icon: <User /> },
+    { key: "privateHireCard", label: "Private Hire  Card", icon: <CreditCard /> },
+    { key: "dvlaCard", label: "DVLA Card", icon: <CreditCard /> },
+    { key: "carPicture", label: "Car Picture", icon: <Car /> },
+    {
+      key: "privateHireCarPaper",
+      label: "Private Hire Car Paper",
+      icon: <FileText />,
+    },
+    {
+      key: "driverPrivateHirePaper",
+      label: "Driver Private Hire Paper",
+      icon: <CreditCard />,
+    },
+    { key: "insurance", label: "Insurance", icon: <Shield /> },
+    { key: "motExpiry", label: "MOT Expiry", icon: <Shield /> },
+    { key: "V5", label: "V5", icon: <Shield /> },
+  ];
 
 
 
