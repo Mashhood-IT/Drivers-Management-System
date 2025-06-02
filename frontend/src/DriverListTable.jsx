@@ -50,9 +50,7 @@ export default function DriverListTable() {
         driver.carMake?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         driver.carModal?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         driver.employeeNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        driver.carRegistration
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase())
+        driver.carRegistration?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     return true;

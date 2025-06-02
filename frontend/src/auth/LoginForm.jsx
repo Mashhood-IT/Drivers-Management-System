@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
 
@@ -16,7 +15,6 @@ const user = localStorage.getItem("user");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
@@ -29,17 +27,13 @@ const user = localStorage.getItem("user");
         localStorage.setItem("user", JSON.stringify(userWithToken));
         toast.success("Login successful!");
         navigate("/DriverListTable")
-      } else {
-        setError("Login failed: Token not received");
       }
     }catch (err) {
       console.error("Login error details:", err);
+      toast.error("Login failed: " + (err.response?.data?.message || "Server error"));
+  
       setLoading(false)
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Login failed: Server error");
-      }
+    
     }
     
   };
@@ -97,12 +91,7 @@ const user = localStorage.getItem("user");
             </div>
           </div>
           
-          {error && (
-            <div className="flex items-center p-3 text-sm bg-red-50 text-red-500 rounded-md">
-              <AlertCircle size={16} className="mr-2 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
+        
           
           <div className="pt-2">
           <button
