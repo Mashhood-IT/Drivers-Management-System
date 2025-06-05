@@ -142,9 +142,9 @@ const DriverPersonalDetails = ({
       <div key={type} className="flex items-center">
         <input
           type="checkbox"
-          id={type.toLowerCase().replace(/ /g, "")}
+          id={type}
           onChange={handleCheckboxChange}
-checked={formData.vehicleTypes.includes(type.toLowerCase().replace(/ /g, ""))}
+checked={formData.vehicleTypes.includes(type)}
           className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
         />
         <label

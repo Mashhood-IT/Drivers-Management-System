@@ -140,25 +140,21 @@ const navigate = useNavigate()
     }
   };
 
+  
   const handleCheckboxChange = (e) => {
     const { id, checked } = e.target;
-  
     setFormData((prev) => {
-      const currentTypes = prev.vehicleTypes || [];
+      const updatedVehicleTypes = checked
+        ? [...prev.vehicleTypes, id] // Add vehicle type if checked
+        : prev.vehicleTypes.filter((type) => type !== id); // Remove vehicle type if unchecked
   
-      if (checked) {
-        return {
-          ...prev,
-          vehicleTypes: [...currentTypes, id],
-        };
-      } else {
-        return {
-          ...prev,
-          vehicleTypes: currentTypes.filter((type) => type !== id),
-        };
-      }
+      return {
+        ...prev,
+        vehicleTypes: updatedVehicleTypes, // Update vehicleTypes array
+      };
     });
   };
+  
   
   
   const [filePreviews, setFilePreviews] = useState({});
