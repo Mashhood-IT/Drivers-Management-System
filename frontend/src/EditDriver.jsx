@@ -169,7 +169,7 @@ const navigate = useNavigate()
       try {
         setLoading(true);
         const response = await getUserById(id);
-        console.log("Fetched driver data:", response.data); // 👈 Add this
+        console.log("Fetched driver data:", response.data); 
         setFormData(response.data.driver);
       } catch (error) {
         console.error("Failed to fetch driver data:", error);

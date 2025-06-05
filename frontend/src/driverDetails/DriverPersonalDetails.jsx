@@ -207,24 +207,25 @@ checked={formData.vehicleTypes.includes(type.toLowerCase().replace(/ /g, ""))}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                License Expiry
-              </label>
-              <div className="flex items-center border border-gray-300 p-2.5 rounded-lg ">
-                <Calendar size={18} className="text-gray-400 mr-2" />
-                <input
-  type="date"
-  name="driverLicenseExpiry"
-  value={
-    formData.driverLicenseExpiry
-      ? formData.driverLicenseExpiry.split("T")[0]
-      : ""
-  }
-  onChange={handleInputChange}
-/>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    License Expiry
+  </label>
+  <div className="flex items-center border border-gray-300 p-2.5 rounded-lg ">
+    <Calendar size={18} className="text-gray-400 mr-2" />
+    <input
+      type="date"
+      name="driverLicenseExpiry"
+      value={
+        formData.driverLicenseExpiry
+          ? formData.driverLicenseExpiry.split("T")[0]
+          : ""
+      }
+      onChange={handleInputChange}
+      className="flex-1 outline-none"
+    />
+  </div>
+</div>
 
-              </div>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

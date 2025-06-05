@@ -4,7 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../config/multer");
-const {getDriverById , createDriver, getAllDrivers, deleteDriverById, updateDriverById, getSecureAssetUrl } = require("../controller/driverController");
+const {getDriverById , createDriver, getAllDrivers, deleteDriverById, updateDriverById } = require("../controller/driverController");
 
 router.post(
   "/create-driver",

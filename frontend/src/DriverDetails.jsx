@@ -10,7 +10,7 @@ import { CAR_FIELDS, FILE_FIELDS, TEXT_FIELDS } from "./Helpers/Data";
 import DriverDetailsPDF from "./utilities/DriverDetailsPDF";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
-export default function DriverDetails() {
+const  DriverDetails =() => {
   const { id } = useParams();
   const [driver, setDriver] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -316,3 +316,5 @@ export default function DriverDetails() {
   );
 }
   
+
+export default DriverDetails;
