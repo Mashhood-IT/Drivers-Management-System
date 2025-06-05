@@ -9,7 +9,7 @@
  const authRoutes = require("./routes/authRoutes")
   app.use(express.json());
   app.use(cors({
-    origin: "*", 
+    origin: process.env.FRONTEND_ORIGIN, 
     credentials: true ,
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
