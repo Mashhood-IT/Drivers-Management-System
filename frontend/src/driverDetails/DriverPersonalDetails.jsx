@@ -132,11 +132,12 @@ const DriverPersonalDetails = ({
   </label>
   <div className="grid grid-cols-2 gap-2">
     {[
-      "Standard Sedan",
-      "Luxury",
-      "SUV",
-      "Van / MPV",
-      "Commercial MPV",
+      "Standard Saloon",
+      "Executive Saloon",
+      "Luxury Saloon",
+      "6 Passenger MPV",
+      "8 Passenger MPV",
+      
     ].map((type) => (
       <div key={type} className="flex items-center">
         <input
